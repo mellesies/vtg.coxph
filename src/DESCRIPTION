@@ -3,7 +3,7 @@ Vantage-Comment:
     * This file was generated from DESCRIPTION.tpl *
     * Please don't modify it directly!             *
     ************************************************
-Package: vantage.coxph
+Package: vtg.coxph
 Type: Package
 Title:
 Version: 0.1.0
@@ -22,9 +22,9 @@ Imports:
     httr,
     rjson,
     dplyr,
-    vantage.infrastructure
+    vtg
 Remotes:
-    mellesies/vantage.infrastructure
+    mellesies/vtg
 RoxygenNote: 7.0.0
 
 

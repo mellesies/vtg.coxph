@@ -17,9 +17,9 @@ Imports:
     httr,
     rjson,
     dplyr,
-    vantage.infrastructure
+    vtg
 Remotes:
-    mellesies/vantage.infrastructure
+    mellesies/vtg
 RoxygenNote: 7.0.0
 
 

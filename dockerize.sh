@@ -31,8 +31,6 @@ docker build \
   -t $HOST/$IMAGE:$TAG \
   .
 
-# exit
-
 # Push the new image to the registry
 docker push $HOST/$IMAGE:$TAG
 

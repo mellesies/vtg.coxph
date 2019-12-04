@@ -4,14 +4,11 @@
 Run the following in the R console to install the package and its dependencies:
 ```R
 # This also installs the package vantage.infrastructure
-devtools::install_github('mellesies/vantage.coxph')
+devtools::install_github('mellesies/vtg.coxph')
 ```
 
 ## Example use
 ```R
-# Load the package
-library(vantage.coxph)
-
 # Function to create a client
 setup.client <- function() {
   # Define parameters
@@ -22,7 +19,7 @@ setup.client <- function() {
   api_path <- ''
   
   # Create the client
-  client <- Client$new(host, api_path=api_path)
+  client <- vtg::Client$new(host, api_path=api_path)
   client$authenticate(username, password)
   client$setCollaborationId(collaboration_id)
   
@@ -40,16 +37,13 @@ time_col <- "Time"
 censor_col <- "Censor"
 
 # vantage.coxph contains the function `dcoxph`.
-result <- dcoxph(client, expl_vars, time_col, censor_col)
+result <- vtg.coxph::dcoxph(client, expl_vars, time_col, censor_col)
 ```
 
 ## Example use for testing
 ```R
-# Load the package
-library(vantage.coxph)
-
 # Load a dataset
-data(SEER)
+data(SEER, package='vtg.coxph')
 df <- SEER
 
 # Variables frequently used as input for the RPC calls
@@ -59,5 +53,5 @@ expl_vars <- c("Age","Race2","Race3","Mar2","Mar3","Mar4","Mar5","Mar9",
 time_col <- "Time"
 censor_col <- "Censor"
 
-result <- dcoxph.mock(df, expl_vars, time_col, censor_col, splits=splits)
+result <- vtg.coxph::dcoxph.mock(df, expl_vars, time_col, censor_col, splits=splits)
 ```

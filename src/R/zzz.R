@@ -19,4 +19,4 @@
 
 # FIXME: This is as close as I can get to a package-wide 'import x from y'
 #        Anyone know a better way?
-writeln <- vantage.infrastructure::writeln
+writeln <- vtg::writeln
