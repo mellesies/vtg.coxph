@@ -1,13 +1,38 @@
 # `make` is expected to be called from the directory that contains
-# `Makefile`. PKG_NAME is based on the package's folder name.
+# this Makefile
+
+# PKG_NAME is based on the name of the folder that holds this code
+# (i.e. the name of the directory that contains 'src')
 $(eval PKG_NAME := $(shell Rscript -e "cat(basename(dirname(getwd())))"))
 
-build: desc
-	@echo Building package: \"$(PKG_NAME)\"
+HOST := 'harbor.distributedlearning.ai'
+IMAGE := "vantage/${PKG_NAME}"
+TAG := "test"
+
+echo:
+	@echo "package name: ${PKG_NAME}"
+	@echo "  image name: ${IMAGE}"
+	@echo "  tag: ${TAG}"
+
+all: build install docker
+
+build: install_deps document
+	@echo "*** Building \"$(PKG_NAME)\" ***"
+	@mkdir ../dist; cd ../dist; R CMD build ../src
+
+install_deps: DESCRIPTION
+	@echo "*** Installing dependencies for \"$(PKG_NAME)\" ***"
 	@Rscript -e 'library(devtools)' -e 'install_deps(".")'
+
+install: install_deps document
+	@echo "*** Installing package \"$(PKG_NAME)\" ***"
 	@R CMD INSTALL --no-multiarch --with-keep.source .
 
-desc: DESCRIPTION.tpl
+uninstall:
+	@echo "*** Removing package \"$(PKG_NAME)\" ***"
+	@R CMD REMOVE ${PKG_NAME}
+
+DESCRIPTION: DESCRIPTION.tpl
 	@echo "Generating \"DESCRIPTION\" from \"DESCRIPTION.tpl\""
 	@echo "Vantage-Comment:" > DESCRIPTION
 	@echo "    ************************************************" >> DESCRIPTION
@@ -17,4 +42,34 @@ desc: DESCRIPTION.tpl
 	@sed "s/{{PKG_NAME}}/${PKG_NAME}/g" DESCRIPTION.tpl >> DESCRIPTION
 
 document:
-	Rscript -e "devtools::document(roclets=c('rd', 'collate', 'namespace', 'vignette'))"
+	@Rscript -e "devtools::document(roclets=c('rd', 'collate', 'namespace', 'vignette'))"
+
+docker: DESCRIPTION docker_build docker_push
+
+docker_build:
+	@echo "************************************************************************"
+	@echo "* Building image '${IMAGE}:${TAG}' "
+	@echo "************************************************************************"
+
+	# The custom R base adds a few linux packages (openssl & xml2)
+	# Additionally, it installs the R packages in 'install_base_packages.R'
+	# to speedup building the image container this package's source.
+	docker build \
+	   -f ../docker/Dockerfile.custom-r-base \
+	   -t custom-r-base \
+	   ../
+
+	# Build the docker image containing the local algorithm
+	# docker build --no-cache -f docker/Dockerfile -t $IMAGE:$TAG -t $HOST/$IMAGE:$TAG .
+	docker build \
+	  -f ../docker/Dockerfile \
+	   --build-arg PKG_NAME=${PKG_NAME} \
+	  -t ${IMAGE}:${TAG} \
+	  -t ${HOST}/${IMAGE}:${TAG} \
+	  ../
+
+docker_push: docker_build
+	docker push ${HOST}/${IMAGE}:${TAG}
+
+clean:
+	rm DESCRIPTION
