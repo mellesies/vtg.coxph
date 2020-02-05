@@ -1,10 +1,10 @@
-# vantage.coxph
+# vtg.coxph
 
 ## Installation
 Run the following in the R console to install the package and its dependencies:
 ```R
-# This also installs the package vantage.infrastructure
-devtools::install_github('mellesies/vtg.coxph')
+# This also installs the package vtg
+devtools::install_github('mellesies/vtg.coxph', subdir="src")
 ```
 
 ## Example use
