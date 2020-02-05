@@ -1,4 +1,5 @@
 # vtg.coxph
+Implementation of the Cox Proportional Hazards algorithm for the Vantage6 federated infrastructure.
 
 ## Installation
 Run the following in the R console to install the package and its dependencies:
