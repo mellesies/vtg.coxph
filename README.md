@@ -9,6 +9,9 @@ devtools::install_github('mellesies/vtg.coxph', subdir="src")
 
 ## Example use
 ```R
+# Load the package
+library(vtg.coxph)
+
 # Function to create a client
 setup.client <- function() {
   # Define parameters
