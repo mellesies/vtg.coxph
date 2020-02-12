@@ -13,7 +13,7 @@
 dcoxph <- function(client, expl_vars, time_col, censor_col) {
     MAX_COMPLEXITY = 250000
 
-    image.name <- "harbor.distributedlearning.ai/vantage/vantage.coxph:test"
+    image.name <- "harbor.distributedlearning.ai/vantage/vtg.coxph:test"
 
     client$set.task.image(
         image.name,

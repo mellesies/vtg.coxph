@@ -13,8 +13,17 @@ echo:
 	@echo "package name: ${PKG_NAME}"
 	@echo "  image name: ${IMAGE}"
 	@echo "  tag: ${TAG}"
+	@echo "  pwd: ${PWD}"
+	@echo ""
 
-all: build install docker
+help:
+	@echo "Run ..."
+	@echo "  'make build' to build the package in ../dist"
+	@echo "  'make install' to install the source package"
+	@echo "  'make docker' to build & push the docker image"
+	@echo "  'make all' to build the package and push the docker image"
+
+all: echo build install docker
 
 build: install_deps document
 	@echo "*** Building \"$(PKG_NAME)\" ***"
