@@ -12,6 +12,7 @@
 #'   variable.
 dcoxph <- function(client, expl_vars, time_col, censor_col) {
     MAX_COMPLEXITY = 250000
+    USE_VERBOSE_OUTPUT = getOption('vtg.verbose_output', F)
 
     image.name <- "harbor.distributedlearning.ai/vantage/vtg.coxph:test"
 
@@ -23,7 +24,7 @@ dcoxph <- function(client, expl_vars, time_col, censor_col) {
     m <- length(expl_vars)
 
     # Ask all nodes to return their unique event times with counts
-    writeln("Getting unique event times and counts")
+    vtg::log$debug("Getting unique event times and counts")
     results <- client$call("get_unique_event_times_and_counts", time_col, censor_col)
 
     Ds <- lapply(results, as.data.frame)
@@ -32,16 +33,16 @@ dcoxph <- function(client, expl_vars, time_col, censor_col) {
     unique_event_times <- as.numeric(names(D_all))
 
     complexity <- length(unique_event_times) * length(expl_vars)^2
-    writeln("********************************************")
-    writeln(c("Complexity:", complexity))
-    writeln("********************************************")
+    vtg::log$debug("********************************************")
+    vtg::log$debug(c("Complexity:", complexity))
+    vtg::log$debug("********************************************")
 
     if (complexity > MAX_COMPLEXITY) {
         stop("*** This computation will be too heavy on the nodes! Aborting! ***")
     }
 
     # Ask all nodes to compute the summed Z statistic
-    writeln("Getting the summed Z statistic")
+    vtg::log$debug("Getting the summed Z statistic")
     summed_zs <- client$call("compute_summed_z", expl_vars, time_col, censor_col)
 
     # z_hat: vector of same length m
@@ -54,20 +55,23 @@ dcoxph <- function(client, expl_vars, time_col, censor_col) {
 
 
     # Initialize the betas to 0 and start iterating
-    writeln("Starting iterations ...")
+    vtg::log$debug("Starting iterations ...")
     beta <- beta_old <- rep(0, m)
     delta <- 0
 
     i = 1
     while (i <= 30) {
-        writeln(sprintf("-- Iteration %i --", i))
-        writeln("Beta's:")
-        print(beta)
-        writeln()
 
-        writeln("delta: ")
-        print(delta)
-        writeln()
+        vtg::log$debug(sprintf("Executing iteration %i", i))
+        if (USE_VERBOSE_OUTPUT) {
+            writeln("Beta's:")
+            print(beta)
+            writeln()
+
+            writeln("delta: ")
+            print(delta)
+            writeln()
+        }
 
         aggregates <- client$call("perform_iteration", expl_vars, time_col, censor_col, beta, unique_event_times)
 
@@ -90,7 +94,7 @@ dcoxph <- function(client, expl_vars, time_col, censor_col) {
         }
 
         if (delta <= 10^-8) {
-            writeln("Betas have settled! Finished iterating!")
+            vtg::log$debug("Betas have settled! Finished iterating!")
             break
         }
 
