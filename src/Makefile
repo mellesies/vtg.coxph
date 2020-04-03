@@ -5,9 +5,10 @@
 # (i.e. the name of the directory that contains 'src')
 $(eval PKG_NAME := $(shell Rscript -e "cat(basename(dirname(getwd())))"))
 
-HOST := 'harbor.distributedlearning.ai'
-IMAGE := "vantage/${PKG_NAME}"
-TAG := "test"
+HOST ?= 'harbor.distributedlearning.ai'
+IMAGE ?= "vantage/${PKG_NAME}"
+# TAG := "test"
+TAG ?= "trolltunga"
 
 echo:
 	@echo "package name: ${PKG_NAME}"
@@ -25,15 +26,15 @@ help:
 
 all: echo build install docker
 
-build: install_deps document
+build: install-deps document
 	@echo "*** Building \"$(PKG_NAME)\" ***"
 	@mkdir ../dist; cd ../dist; R CMD build ../src
 
-install_deps: DESCRIPTION
+install-deps: DESCRIPTION
 	@echo "*** Installing dependencies for \"$(PKG_NAME)\" ***"
 	@Rscript -e 'library(devtools)' -e 'install_deps(".")'
 
-install: install_deps document
+install: document
 	@echo "*** Installing package \"$(PKG_NAME)\" ***"
 	@R CMD INSTALL --no-multiarch --with-keep.source .
 
@@ -53,9 +54,9 @@ DESCRIPTION: DESCRIPTION.tpl
 document:
 	@Rscript -e "devtools::document(roclets=c('rd', 'collate', 'namespace', 'vignette'))"
 
-docker: DESCRIPTION docker_build docker_push
+docker: DESCRIPTION build-docker push-docker
 
-docker_build:
+build-docker:
 	@echo "************************************************************************"
 	@echo "* Building image '${IMAGE}:${TAG}' "
 	@echo "************************************************************************"
@@ -77,7 +78,7 @@ docker_build:
 	  -t ${HOST}/${IMAGE}:${TAG} \
 	  ../
 
-docker_push: docker_build
+push-docker: build-docker
 	docker push ${HOST}/${IMAGE}:${TAG}
 
 clean:

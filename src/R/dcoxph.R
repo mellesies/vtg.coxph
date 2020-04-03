@@ -14,7 +14,7 @@ dcoxph <- function(client, expl_vars, time_col, censor_col) {
     MAX_COMPLEXITY = 250000
     USE_VERBOSE_OUTPUT = getOption('vtg.verbose_output', F)
 
-    image.name <- "harbor.distributedlearning.ai/vantage/vtg.coxph:test"
+    image.name <- "harbor.distributedlearning.ai/vantage/vtg.coxph:trolltunga"
 
     client$set.task.image(
         image.name,

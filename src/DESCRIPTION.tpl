@@ -16,10 +16,10 @@ Imports:
     glue,
     httr,
     rjson,
-    dplyr,
+    dplyr (<= 0.8.4),
     vtg
 Remotes:
-    mellesies/vtg
+    mellesies/vtg@trolltunga
 RoxygenNote: 7.0.0
 
 
