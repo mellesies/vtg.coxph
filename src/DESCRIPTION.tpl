@@ -1,14 +1,14 @@
 Package: {{PKG_NAME}}
 Type: Package
-Title:
 Version: 0.1.0
+Title: Cox Proportional Hazards implementation for the vantage6 infrastructure
+Description: This package can be used with the vantage6 federated
+    learning infrastructure (see https://github.com/IKNL/vantage6).
 Author:
     Frank Martin <f.martin@iknl.nl>,
     Gijs Geleijnse <g.geleijnse@iknl.nl>,
     Melle Sieswerda <m.sieswerda@iknl.nl>
 Maintainer: Melle Sieswerda <m.sieswerda@iknl.nl>
-Description: This package can be used with the Vantage federated
-    learning infrastructure (see https://github.com/IKNL/vantage).
 License: MIT
 Encoding: UTF-8
 LazyData: true
@@ -19,7 +19,7 @@ Imports:
     dplyr (<= 0.8.4),
     vtg
 Remotes:
-    mellesies/vtg@trolltunga
+    mellesies/vtg
 RoxygenNote: 7.0.0
 
 
