@@ -22,7 +22,7 @@ dcoxph.mock <- function(df, expl_vars, time_col, censor_col, splits=5) {
         datasets[[k]] <- df[seq(k, nrow(df), by=splits), ]
     }
 
-    client <- vtg::MockClient(datasets, pkgname=getPackageName())
+    client <- vtg::MockClient$new(datasets, pkgname=getPackageName())
     results <- dcoxph(client, expl_vars, time_col, censor_col)
     return(results)
 }

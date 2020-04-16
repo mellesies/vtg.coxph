@@ -5,16 +5,15 @@
 # (i.e. the name of the directory that contains 'src')
 $(eval PKG_NAME := $(shell Rscript -e "cat(basename(dirname(getwd())))"))
 
-HOST ?= 'harbor.distributedlearning.ai'
-IMAGE ?= "vantage/${PKG_NAME}"
-# TAG := "test"
-TAG ?= "trolltunga"
+HOST ?= harbor.distributedlearning.ai
+IMAGE ?= vantage/${PKG_NAME}
+TAG ?= trolltunga
 
 echo:
 	@echo "package name: ${PKG_NAME}"
 	@echo "  image name: ${IMAGE}"
-	@echo "  tag: ${TAG}"
-	@echo "  pwd: ${PWD}"
+	@echo "         tag: ${TAG}"
+	@echo "         pwd: ${PWD}"
 	@echo ""
 
 help:
@@ -54,9 +53,9 @@ DESCRIPTION: DESCRIPTION.tpl
 document:
 	@Rscript -e "devtools::document(roclets=c('rd', 'collate', 'namespace', 'vignette'))"
 
-docker: DESCRIPTION build-docker push-docker
+docker: DESCRIPTION docker-build docker-push
 
-build-docker:
+docker-build:
 	@echo "************************************************************************"
 	@echo "* Building image '${IMAGE}:${TAG}' "
 	@echo "************************************************************************"
@@ -78,7 +77,7 @@ build-docker:
 	  -t ${HOST}/${IMAGE}:${TAG} \
 	  ../
 
-push-docker: build-docker
+docker-push: docker-build
 	docker push ${HOST}/${IMAGE}:${TAG}
 
 clean:
