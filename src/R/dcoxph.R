@@ -21,6 +21,14 @@ dcoxph <- function(client, expl_vars, time_col, censor_col) {
         task.name="CoxPH"
     )
 
+    # Run in a MASTER container
+    if (client$use.master.container) {
+        vtg::log$debug("Running `dcoxph` in master container using image '{image.name}'")
+        result <- client$call("dcoxph", expl_vars, time_col, censor_col)
+        return(result)
+    }
+
+    # Run in a REGULAR container
     m <- length(expl_vars)
 
     # Ask all nodes to return their unique event times with counts
