@@ -61,7 +61,6 @@ dcoxph <- function(client, expl_vars, time_col, censor_col) {
     z_hat <- matrix(z_hat, ncol=m, dimnames=list(NULL, expl_vars))
     z_hat <- colSums(z_hat)
 
-
     # Initialize the betas to 0 and start iterating
     vtg::log$debug("Starting iterations ...")
     beta <- beta_old <- rep(0, m)
@@ -69,7 +68,6 @@ dcoxph <- function(client, expl_vars, time_col, censor_col) {
 
     i = 1
     while (i <= 30) {
-
         vtg::log$debug(sprintf("Executing iteration %i", i))
         if (USE_VERBOSE_OUTPUT) {
             writeln("Beta's:")
@@ -121,7 +119,10 @@ dcoxph <- function(client, expl_vars, time_col, censor_col) {
     }
 
     # Calculating P and Z values
-    zvalues <- (exp(beta)-1)/SErrors
+    # zvalues <- (exp(beta)-1)/SErrors
+
+    # Now calculating the z-values the same way `survival::coxph()` does it.
+    zvalues <- beta/SErrors
     pvalues <- 2*pnorm(-abs(zvalues))
     pvalues <- format.pval(pvalues, digits = 1)
 
@@ -130,6 +131,7 @@ dcoxph <- function(client, expl_vars, time_col, censor_col) {
     results <- dplyr::mutate(results, lower_ci=round(exp(coef - 1.96 * SE), 5))
     results <- dplyr::mutate(results, upper_ci=round(exp(coef + 1.96 * SE), 5))
     results <- dplyr::mutate(results, "Z"=round(zvalues, 2), "P"=pvalues)
+    # results <- dplyr::mutate(results, "Z_2"=round(zvalues2, 2), "P_2"=pvalues2)
     row.names(results) <- rownames(beta)
 
     return(results)
