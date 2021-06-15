@@ -4,18 +4,19 @@
 \alias{dcoxph}
 \title{Run the distributed CoxPH algorithm.}
 \usage{
-dcoxph(client, expl_vars, time_col, censor_col)
+dcoxph(client, input_)
 }
 \description{
 Params:
   client: ptmclient::Client instance.
-  expl_vars: list of explanatory variables (covariates) to use
-  time_col: name of the column that contains the event/censor times
-  censor_col: name of the colunm that explains whether an event occured or
-              the patient was censored
+  input_: json structure containing
+     expl_vars: list of explanatory variables (covariates) to use
+     time_col: name of the column that contains the event/censor times
+     censor_col: name of the column that explains whether an event occurred
+                 or the patient was censored
 }
 \details{
 Return:
-  data.frame with beta, p-value and confidence interval for each explanatory
-  variable.
+  json with beta, p-value and confidence interval for each explanatory
+  variable. (convert to R data.frame with jsonlite::fromJSON(...))
 }
