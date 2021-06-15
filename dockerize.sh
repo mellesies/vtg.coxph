@@ -1,5 +1,5 @@
 #!/bin/bash
-HOST='harbor.distributedlearning.ai'
+HOST='harbor.vantage6.ai'
 PKG_NAME=${PWD##*/}
 IMAGE="vantage/$PKG_NAME"
 TAG='test'

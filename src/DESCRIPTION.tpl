@@ -17,6 +17,9 @@ Imports:
     httr,
     rjson,
     dplyr (<= 0.8.4),
+    vtg
+Remotes:
+    mellesies/vtg
 RoxygenNote: 7.0.0
 
 
