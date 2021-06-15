@@ -2,19 +2,26 @@
 #'
 #' Params:
 #'   client: ptmclient::Client instance.
-#'   expl_vars: list of explanatory variables (covariates) to use
-#'   time_col: name of the column that contains the event/censor times
-#'   censor_col: name of the colunm that explains whether an event occured or
-#'               the patient was censored
+#'   input_: json structure containing
+#'      expl_vars: list of explanatory variables (covariates) to use
+#'      time_col: name of the column that contains the event/censor times
+#'      censor_col: name of the column that explains whether an event occurred
+#'                  or the patient was censored
 #'
 #' Return:
-#'   data.frame with beta, p-value and confidence interval for each explanatory
-#'   variable.
-dcoxph <- function(client, expl_vars, time_col, censor_col) {
+#'   json with beta, p-value and confidence interval for each explanatory
+#'   variable. (convert to R data.frame with jsonlite::fromJSON(...))
+dcoxph <- function(client, input_) {
+
+    arguments = jsonlite::fromJSON(input_)
+    expl_vars = arguments$expl_vars
+    time_col = arguments$time_col
+    censor_col = arguments$censor_col
+
     MAX_COMPLEXITY = 250000
     USE_VERBOSE_OUTPUT = getOption('vtg.verbose_output', F)
 
-    image.name <- "harbor.distributedlearning.ai/vantage/vtg.coxph:trolltunga"
+    image.name <- "harbor.vantage6.ai/vantage/vtg.coxph:harukas"
 
     client$set.task.image(
         image.name,
@@ -24,7 +31,7 @@ dcoxph <- function(client, expl_vars, time_col, censor_col) {
     # Run in a MASTER container
     if (client$use.master.container) {
         vtg::log$debug("Running `dcoxph` in master container using image '{image.name}'")
-        result <- client$call("dcoxph", expl_vars, time_col, censor_col)
+        result <- client$call("dcoxph", input_)
         return(result)
     }
 
@@ -134,6 +141,8 @@ dcoxph <- function(client, expl_vars, time_col, censor_col) {
     # results <- dplyr::mutate(results, "Z_2"=round(zvalues2, 2), "P_2"=pvalues2)
     row.names(results) <- rownames(beta)
 
-    return(results)
+    results_json = jsonlite::toJSON(results)
+
+    return(results_json)
 }
 

@@ -39,14 +39,17 @@ print( client$getCollaborations() )
 client$setCollaborationId(1)
 
 # Define explanatory variables, time column and censor column
-expl_vars <- c("Age","Race2","Race3","Mar2","Mar3","Mar4","Mar5","Mar9",
-               "Hist8520","hist8522","hist8480","hist8501","hist8201",
-               "hist8211","grade","ts","nne","npn","er2","er4")
-time_col <- "Time"
-censor_col <- "Censor"
+input_ = '{
+    "expl_vars": ["Age","Race2","Race3","Mar2","Mar3","Mar4","Mar5","Mar9",
+                  "Hist8520","hist8522","hist8480","hist8501","hist8201",
+                  "hist8211","grade","ts","nne","npn","er2","er4"],
+    "time_col": "Time",
+    "censor_col": "Censor"
+}'
+
 
 # vtg.coxph contains the function `dcoxph`.
-result <- vtg.coxph::dcoxph(client, expl_vars, time_col, censor_col)
+result <- vtg.coxph::dcoxph(client, input_)
 ```
 
 ## Example use for testing
@@ -55,11 +58,13 @@ result <- vtg.coxph::dcoxph(client, expl_vars, time_col, censor_col)
 data('SEER', package='vtg.coxph')
 
 # Define explanatory variables, time column and censor column
-expl_vars <- c("Age","Race2","Race3","Mar2","Mar3","Mar4","Mar5","Mar9",
-               "Hist8520","hist8522","hist8480","hist8501","hist8201",
-               "hist8211","grade","ts","nne","npn","er2","er4")
-time_col <- "Time"
-censor_col <- "Censor"
+input_ = '{
+    "expl_vars": ["Age","Race2","Race3","Mar2","Mar3","Mar4","Mar5","Mar9",
+                  "Hist8520","hist8522","hist8480","hist8501","hist8201",
+                  "hist8211","grade","ts","nne","npn","er2","er4"],
+    "time_col": "Time",
+    "censor_col": "Censor"
+}'
 
-result <- vtg.coxph::dcoxph.mock(SEER, expl_vars, time_col, censor_col)
+result <- vtg.coxph::dcoxph.mock(SEER, input_)
 ```
