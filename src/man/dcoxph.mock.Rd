@@ -4,7 +4,7 @@
 \alias{dcoxph.mock}
 \title{Run the distributed CoxPH algorithm locally}
 \usage{
-dcoxph.mock(df, input_, splits = 5)
+dcoxph.mock(df, input_data, splits = 5)
 }
 \description{
 Splits the provided data frame in `splits` equal parts and runs

@@ -14,7 +14,7 @@
 #' Return:
 #'   data.frame with beta, p-value and confidence interval for each explanatory
 #'   variable.
-dcoxph.mock <- function(df, input_, splits=5) {
+dcoxph.mock <- function(df, input_data, splits=5) {
 
     datasets <- list()
 
@@ -23,7 +23,7 @@ dcoxph.mock <- function(df, input_, splits=5) {
     }
 
     client <- vtg::MockClient$new(datasets, pkgname=getPackageName())
-    results <- dcoxph(client, input_)
+    results <- dcoxph(client, input_data)
     return(results)
 }
 

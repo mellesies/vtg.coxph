@@ -2,7 +2,7 @@
 #'
 #' Params:
 #'   client: ptmclient::Client instance.
-#'   input_: json structure containing
+#'   input_data: input_data containing
 #'      expl_vars: list of explanatory variables (covariates) to use
 #'      time_col: name of the column that contains the event/censor times
 #'      censor_col: name of the column that explains whether an event occurred
@@ -11,12 +11,7 @@
 #' Return:
 #'   json with beta, p-value and confidence interval for each explanatory
 #'   variable. (convert to R data.frame with jsonlite::fromJSON(...))
-dcoxph <- function(client, input_) {
-
-    arguments = jsonlite::fromJSON(input_)
-    expl_vars = arguments$expl_vars
-    time_col = arguments$time_col
-    censor_col = arguments$censor_col
+dcoxph <- function(client, expl_vars, time_col, censor_col) {
 
     MAX_COMPLEXITY = 250000
     USE_VERBOSE_OUTPUT = getOption('vtg.verbose_output', F)
@@ -31,7 +26,7 @@ dcoxph <- function(client, input_) {
     # Run in a MASTER container
     if (client$use.master.container) {
         vtg::log$debug("Running `dcoxph` in master container using image '{image.name}'")
-        result <- client$call("dcoxph", input_)
+        result <- client$call("dcoxph", expl_vars, time_col, censor_col)
         return(result)
     }
 

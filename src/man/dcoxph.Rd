@@ -4,12 +4,12 @@
 \alias{dcoxph}
 \title{Run the distributed CoxPH algorithm.}
 \usage{
-dcoxph(client, input_)
+dcoxph(client, input_data)
 }
 \description{
 Params:
   client: ptmclient::Client instance.
-  input_: json structure containing
+  input_data: input_data containing
      expl_vars: list of explanatory variables (covariates) to use
      time_col: name of the column that contains the event/censor times
      censor_col: name of the column that explains whether an event occurred
